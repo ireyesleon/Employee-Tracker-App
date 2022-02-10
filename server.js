@@ -17,3 +17,35 @@ const db = mysql.createConnection(
   },
   console.log(`Connected to the company_db database.`)
 );
+
+//Inquirer questions
+const startApp = () => {
+  return inquirer
+  .prompt([
+    {
+      type: 'list',
+      name: 'choice',
+      message: 'What would you like to do?',
+      choices: ['View All Employees', 'Add Employee', 'Update Employee Role', 'View All Roles', 'Add Role', 'View All Departments', 'Add Department']
+    }])
+    .then(choiceSelected => {
+      switch (choiceSelected.choice) {
+        case "View All Employees": allEmployeees();
+        break;
+        case "Add Employee": addEmployee();
+        break;
+        case "Update Employee Role": updateRole();
+        break;
+        case "View All Roles": viewRoles();
+        break;
+        case "Add Role": addRole();
+        break;
+        case "View All Departments": viewDepartments();
+        break;
+        case "Add Deparment": addDeparment();
+        break;
+      }
+    });
+};
+
+startApp();
