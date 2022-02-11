@@ -1,6 +1,7 @@
 const inquirer = require('inquirer');
 const db = require('./db');
 const cTable = require('console.table');
+const { query } = require('./db/connection');
 
 //Inquirer start questions
 const startApp = () => {
@@ -84,12 +85,16 @@ const addDepartment = () =>{
       message: 'Enter name of the new department'
     }
   ])
-  .then(() => {
+  .then(({ department }) => {
+  db.saveDepartment(department);
+  console.log("New department Saved!")
   startApp();
   })
 };
 
-const addRole = () =>{
+const addRole = async () =>{
+  let departmentNames = await db.getDepartments();
+  console.log(departmentNames)
   return inquirer
   .prompt([
     {
@@ -105,14 +110,16 @@ const addRole = () =>{
     {
       type: 'input',
       name: 'department',
-      message: 'Enter the name of the deparment'
+      message: 'Select the deparment',
+      choices: [departmentNames]
     }
   ])
-  .then(() => {
+  .then(({ role, salary, department }) => {
+  db.saveRole(role, salary, department);
+  console.log("New role saved!")
   startApp();
   })
 };
-
 
 // Function to remove employee
 // function removeEmployee() {

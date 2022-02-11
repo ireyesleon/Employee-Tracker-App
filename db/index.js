@@ -23,6 +23,24 @@ viewRoles() {
         "SELECT role.id, role.title, department.name AS department, role.salary FROM role AS role JOIN department ON department.id = role.department_id"
     )
 }
+
+saveDepartment(department) {
+    return this.connection.promise().query(
+        "INSERT INTO department (name) VALUES (?)", department
+    )
+}
+
+saveRole(role, salary, department) {
+    return this.connection.promise().query(
+        "INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?)", role, salary, department
+    )
+}
+
+getDepartments() {
+    return this.connection.promise().query(
+        "SELECT name FROM department"
+    )
+}
 }
 
 module.exports = new db(connection);

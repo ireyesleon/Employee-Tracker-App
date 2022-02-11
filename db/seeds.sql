@@ -15,11 +15,11 @@ VALUES  ("Sales Lead", 20000, 1),
         ("Scrum Master", 50000, 4);
 
 INSERT INTO employee (first_name, last_name, role_id, manager_id)
-VALUES  ("Isaias", "Reyes", 3, 1),
+VALUES  ("Isaias", "Reyes", 3, null),
         ("Nicolas", "Eguiarte", 4, 1),
-        ("Karla", "Reyes", 1, 3),
+        ("Karla", "Reyes", 1, null),
         ("Areida", "Leon", 2, 3),
         ("Isaac", "Reyes", 7, 6),
-        ("Nicolas", "Reyes", 8, 6),
+        ("Nicolas", "Reyes", 8, null),
         ("Analy", "Reyes", 5, 7),
-        ("Alonso", "Reyes", 6, 7);
+        ("Alonso", "Reyes", 6, null);
