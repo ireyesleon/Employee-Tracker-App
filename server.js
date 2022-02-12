@@ -2,6 +2,7 @@ const inquirer = require('inquirer');
 const db = require('./db');
 const cTable = require('console.table');
 const { query } = require('./db/connection');
+const { getNames, getDepartments } = require('./db');
 
 //Inquirer start questions
 const startApp = () => {
@@ -47,7 +48,9 @@ const startApp = () => {
 startApp();
 
 // Inquirer questions to AddEmployee function
-const addEmployee = () =>{
+const addEmployee = async () =>{
+  let roleNames = await db.getRoles();
+  let empManager = await db.getManager();
   return inquirer
   .prompt([
     {
@@ -61,14 +64,16 @@ const addEmployee = () =>{
       message: 'Please enter last name'
     },
     {
-      type: 'input',
+      type: 'list',
       name: 'role',
-      message: 'Please enter employee role'
+      message: 'Please enter employee role',
+      choices: roleNames
     },
     {
-      type: 'input',
+      type: 'list',
       name: 'emp_manager',
-      message: 'Please enter employee manager'
+      message: 'Please enter employee manager',
+      choices: empManager
     }
   ])
   .then(() => {
@@ -76,13 +81,14 @@ const addEmployee = () =>{
   })
 };
 
+// Function to add new department
 const addDepartment = () =>{
   return inquirer
   .prompt([
     {
       type: 'input',
       name: 'department',
-      message: 'Enter name of the new department'
+      message: 'Enter name of the new department: '
     }
   ])
   .then(({ department }) => {
@@ -92,9 +98,10 @@ const addDepartment = () =>{
   })
 };
 
+// Function to add new role
 const addRole = async () =>{
   let departmentNames = await db.getDepartments();
-  console.log(departmentNames)
+  let allDepartments = departmentNames.map(x => x.map(x => x.name));
   return inquirer
   .prompt([
     {
@@ -108,10 +115,10 @@ const addRole = async () =>{
       message: 'Enter salary of the role'
     },
     {
-      type: 'input',
+      type: 'list',
       name: 'department',
-      message: 'Select the deparment',
-      choices: [departmentNames]
+      message: 'Select the department',
+      choices: allDepartments[0]
     }
   ])
   .then(({ role, salary, department }) => {
@@ -121,8 +128,29 @@ const addRole = async () =>{
   })
 };
 
-// Function to remove employee
-// function removeEmployee() {
-//   db.allEmployeees()
-//   .then()
-// }
+const updateRole = async () => {
+  let employeeList = await db.getNames();
+  let roleNames = await db.getRoles();
+  console.log(employeeList)
+  console.log(roleNames)
+  return inquirer
+  .prompt([
+    {
+      type: 'list',
+      name: 'employee',
+      message: 'Which employee do you want to update?',
+      choices: employeeList
+    },
+    {
+      type: 'list',
+      name: 'role',
+      message: 'Which role do you want to assign to the selected employee?',
+      choices: roleNames
+    }
+  ])
+  .then(({ employee, role }) => {
+    db.updateEmployeeRole(employee, role);
+    console.log("Role updated!")
+    startApp();
+  })
+}
