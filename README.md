@@ -17,6 +17,8 @@
   Run node server in your terminal and an inquirer prompt will start with a set of options, depending on the option selected you will need to answer the questions and this info will be stored in the database.
   
   <img width="696" alt="image" src="https://user-images.githubusercontent.com/89933923/153732168-4dc2bace-2e8e-4d1c-b985-c000dbd0fce3.png">
+
+  How to use the app video: https://drive.google.com/drive/folders/1ayhG_U1fYAD7fBksYOaXIUwhk-fmN_4B?usp=sharing
   
   ## License
     Project Licensed under ISC

@@ -150,7 +150,6 @@ const updateRole = async () => {
     name: x.title,
     value: x.id
   }));
-  console.log(allRoles)
   return inquirer
   .prompt([
     {
