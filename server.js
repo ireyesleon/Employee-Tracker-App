@@ -145,7 +145,6 @@ const updateRole = async () => {
     name: x.full_name,
     value: x.id
   }));
-  console.log(allEmployees)
   let roleNames = await db.getRoles();
   let allRoles = roleNames[0].map(x => ({
     name: x.title,
