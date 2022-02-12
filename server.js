@@ -1,8 +1,6 @@
 const inquirer = require('inquirer');
 const db = require('./db');
 const cTable = require('console.table');
-const { query } = require('./db/connection');
-const { getNames, getDepartments } = require('./db');
 
 //Inquirer start questions
 const startApp = () => {
@@ -50,7 +48,15 @@ startApp();
 // Inquirer questions to AddEmployee function
 const addEmployee = async () =>{
   let roleNames = await db.getRoles();
-  let empManager = await db.getManager();
+  let allRoles = roleNames[0].map(x => ({
+    name: x.title,
+    value: x.id
+  }));
+  let employeeList = await db.getNames();
+  let allEmployees = employeeList[0].map(x => ({
+    name: x.full_name,
+    value: x.id
+  }));
   return inquirer
   .prompt([
     {
@@ -67,16 +73,18 @@ const addEmployee = async () =>{
       type: 'list',
       name: 'role',
       message: 'Please enter employee role',
-      choices: roleNames
+      choices: allRoles
     },
     {
       type: 'list',
       name: 'emp_manager',
       message: 'Please enter employee manager',
-      choices: empManager
+      choices: allEmployees
     }
   ])
-  .then(() => {
+  .then(({ first_name, last_name, role, emp_manager }) => {
+  db.newEmployee(first_name, last_name, role, emp_manager);
+  console.log("New employee added!")
   startApp();
   })
 };
@@ -101,7 +109,10 @@ const addDepartment = () =>{
 // Function to add new role
 const addRole = async () =>{
   let departmentNames = await db.getDepartments();
-  let allDepartments = departmentNames.map(x => x.map(x => x.name));
+  let allDepartments = departmentNames[0].map(x => ({
+    name: x.name,
+    value: x.id
+  }));
   return inquirer
   .prompt([
     {
@@ -118,7 +129,7 @@ const addRole = async () =>{
       type: 'list',
       name: 'department',
       message: 'Select the department',
-      choices: allDepartments[0]
+      choices: allDepartments
     }
   ])
   .then(({ role, salary, department }) => {
@@ -130,26 +141,34 @@ const addRole = async () =>{
 
 const updateRole = async () => {
   let employeeList = await db.getNames();
+  let allEmployees = employeeList[0].map(x => ({
+    name: x.full_name,
+    value: x.id
+  }));
+  console.log(allEmployees)
   let roleNames = await db.getRoles();
-  console.log(employeeList)
-  console.log(roleNames)
+  let allRoles = roleNames[0].map(x => ({
+    name: x.title,
+    value: x.id
+  }));
+  console.log(allRoles)
   return inquirer
   .prompt([
     {
       type: 'list',
       name: 'employee',
       message: 'Which employee do you want to update?',
-      choices: employeeList
+      choices: allEmployees
     },
     {
       type: 'list',
       name: 'role',
       message: 'Which role do you want to assign to the selected employee?',
-      choices: roleNames
+      choices: allRoles
     }
   ])
-  .then(({ employee, role }) => {
-    db.updateEmployeeRole(employee, role);
+  .then(({ role, employee }) => {
+    db.saveEmployeeRole(role, employee);
     console.log("Role updated!")
     startApp();
   })

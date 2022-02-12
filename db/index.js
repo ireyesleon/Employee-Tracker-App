@@ -43,40 +43,37 @@ saveRole(role, salary, department) {
 // Function to display all departments in inquirer
 getDepartments() {
     return this.connection.promise().query(
-        "SELECT name FROM department"
+        "SELECT id, name FROM department"
+    )
+}
+
+// Function to save new Employee
+newEmployee(first_name, last_name, role, emp_manager) {
+    return this.connection.promise().query(
+        "INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?)", [first_name, last_name, role, emp_manager]
     )
 }
 
 // Function to display all employees in inquirer
 getNames() {
     return this.connection.promise().query(
-        "SELECT CONCAT (first_name, ' ', last_name) FROM employee"
+        "SELECT id, CONCAT (first_name, ' ', last_name) as full_name FROM employee"
     )
 }
 
 // Function to display all roles in inquirer
 getRoles() {
     return this.connection.promise().query(
-        "SELECT title FROM role"
-    )
-}
-
-// Function to display all managers in inquirer
-getManager() {
-    return this.connection.promise().query(
-        "SELECT name FROM employee"
+        "SELECT id, title FROM role"
     )
 }
 
 // Function to update employee role
-saveEmployeeRole(employee, role) {
+saveEmployeeRole(role, employee) {
     return this.connection.promise().query(
-        "UPDATE employee SET role_id = ? WHERE id = ?", employee, role
+        "UPDATE employee SET role_id = ? WHERE id = ?", [role, employee]
     )
 }
-
-
-
 }
 
 module.exports = new db(connection);
